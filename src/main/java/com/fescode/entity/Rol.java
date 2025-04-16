@@ -7,19 +7,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "categoria")
+@Table(name = "rol")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Categoria {
+public class Rol {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_categoria")
+    @Column(name = "id_rol")
     private Long id;
 
-    @Column(name = "nombre_categoria", nullable = false, unique = true)
+    @Column(name = "nombre_rol", nullable = false, unique = true)
     private String nombre;
+
+    @Column(name = "descripcion")
     private String descripcion;
-    private String imagen;
 }
