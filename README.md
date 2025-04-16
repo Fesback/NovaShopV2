@@ -27,8 +27,9 @@
 - Crear una API REST lista para integrarse con cualquier cliente frontend (Angular, móvil, etc.)
 
 ---
-```
+
 ## 📁 Estructura del proyecto
+```
 📦 com.fescode.novashop
 ├── 📂 controller/         → 🌐 Controladores REST (API)
 ├── 📂 dto/                → ✉️  Objetos de transferencia de datos (DTOs)
