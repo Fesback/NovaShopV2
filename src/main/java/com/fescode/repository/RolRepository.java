@@ -1,6 +1,6 @@
 package com.fescode.repository;
 
-import com.fescode.entity.Rol;
+import com.fescode.model.Rol;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

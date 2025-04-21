@@ -2,6 +2,7 @@ package com.fescode.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,10 @@ public class JwtService {
     private long expirationTime;
 
     private SecretKey getSigningKey() {
+        if (secretKey == null || secretKey.length() < 64) {
+        throw new IllegalArgumentException("La clave secreta JWT es demasiado corta. Debe tener al menos 64 caracteres para HS512.");
+        }
+        // Genera una clave secreta a partir de la cadena de texto
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 

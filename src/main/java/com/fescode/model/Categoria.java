@@ -1,4 +1,4 @@
-package com.fescode.entity;
+package com.fescode.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

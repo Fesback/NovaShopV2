@@ -1,6 +1,5 @@
 package com.fescode.security.jwt;
 
-import com.fescode.security.user.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

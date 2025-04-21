@@ -67,7 +67,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200"); // Solo mi front
+        config.addAllowedOrigin("*"); // Solo mi front
         config.addAllowedMethod("*"); // especifica: GET, POST, PUT, DELETE
         config.addAllowedHeader("*");
         config.addExposedHeader("Authorization"); // Para JWT

@@ -28,14 +28,14 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-# Configuración JWT (versión final)
+# Configuracion JWT (version final)
 jwt:
   secret:
-    key: ${JWT_SECRET:default-clave-segura-para-dev-solo}
+    key: esta-es-mi-clave-super-secreta-para-dev-123456789012345678901234567890
   expiration:
     access-token: 3600000  # 1 hora (debe coincidir con JwtService)
 
-# Elimina la sección CORS de aquí (lo manejaremos en SecurityConfig)
+# Elimina la seccion CORS de aquÃ­ (lo manejaremos en SecurityConfig)
 
 logging:
   level:
