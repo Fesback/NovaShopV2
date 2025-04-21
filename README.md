@@ -52,12 +52,12 @@
 
 ## 🧩 Módulos incluidos
 
-| Módulo      | Descripción                                 | Estado    |
-|-------------|---------------------------------------------|-----------|
+| Módulo      | Descripción                                 | Estado      |
+|-------------|---------------------------------------------|-------------|
 | Categoría   | CRUD con DTOs, validación y pruebas         | 🔄 En curso |
 | Producto    | CRUD estructurado y validado                | 🔄 En curso |
 | Usuario     | Registro, login (seguridad JWT)             | 🔄 En curso |
-| Seguridad   | Protección de rutas con roles y JWT         | 🔒 Planeado |
+| Seguridad   | Protección de rutas con roles y JWT         | ✅ Terminado |
 | Carrito     | Gestión de compras                          | 🧺 Planeado |
 | Rol         | Autorización basada en roles                | 👥 Planeado |
 
