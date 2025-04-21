@@ -82,6 +82,12 @@ El sistema manejará:
 
 ---
 
+## 🧑‍💻 Login y Registro
+
+- **Login**:  Los usuarios pueden autenticarse mediante un sistema de login utilizando su correo electrónico y contraseña. El sistema genera un JWT que se enviará en las respuestas y se usará para autenticar las futuras peticiones.
+- **Registro**: Los usuarios se pueden registrar proporcionando su correo electrónico, nombre, apellido, contraseña, dirección, y teléfono. Después del registro, se les asigna un rol de usuario predeterminado (cliente).
+
+---
 ## 🛠 ¿Por qué rehacer el backend?
 
 - El código anterior funcionaba, pero no seguía buenas prácticas.
@@ -93,9 +99,9 @@ El sistema manejará:
 
 ## ✅ Estado actual
 
-- [ ] Estructura inicial creada
+- [x] Estructura inicial creada
 - [ ] CRUD de categoría implementado con DTOs y mapper
-- [ ] Seguridad con JWT (en desarrollo)
+- [x] Seguridad con JWT (en desarrollo)
 - [ ] Documentación de API (pendiente con Swagger)
 - [ ] Integración con Angular (en curso)
 
