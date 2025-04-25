@@ -6,14 +6,14 @@ spring:
     active: dev
 
   datasource:
-    url: jdbc:mysql://localhost:3306/novashop_db
+    url: jdbc:mysql://localhost:3306/novashop_db_v2
     username: root
     password: 2104
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -28,20 +28,22 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-# Configuracion JWT (version final)
-jwt:
-  secret:
-    key: esta-es-mi-clave-super-secreta-para-dev-123456789012345678901234567890
-  expiration:
-    access-token: 3600000  # 1 hora (debe coincidir con JwtService)
-
-# Elimina la seccion CORS de aquí (lo manejaremos en SecurityConfig)
-
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    com.fescode: DEBUG
+    root: warn
+    org:
+      springframework:
+        security: TRACE  # Para depurar Spring Security
+        web: DEBUG       # Para ver peticiones HTTP
+      hibernate:
+        SQL: DEBUG                   # Consultas SQL
+        type.descriptor.sql.BasicBinder: TRACE  # Parámetros de queries
+    com:
+      fescode: DEBUG  # Tus clases personalizadas
+
+jwt:
+  secret: "n/EUgwkn4/cTiWbB8WJasw==uEyKhnf7iQDNv9jmiKe6LAEo3p9TFA41kOLjZPW6"
+  expiration: 86400000  # 24 horas en milisegundos
 
 ---
 spring:

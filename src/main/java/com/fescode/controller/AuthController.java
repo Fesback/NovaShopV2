@@ -1,9 +1,10 @@
 package com.fescode.controller;
 
-import com.fescode.dto.request.AuthRequest;
-import com.fescode.dto.request.RegisterRequest;
-import com.fescode.dto.response.AuthResponse;
-import com.fescode.security.service.AuthService;
+import com.fescode.dto.request.LoginRequestDTO;
+import com.fescode.dto.request.RegisterRequestDTO;
+import com.fescode.dto.response.LoginResponseDTO;
+import com.fescode.dto.response.RegisterResponseDTO;
+import com.fescode.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,21 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
      private final AuthService authService;
 
-     public AuthController(AuthService authService) {
-        this.authService = authService; // Problemas con ejecutar por anotacion @AllArgsConstructor asi que mejor ponerlo manualmente
-     }
-
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<RegisterResponseDTO> register(@RequestBody RegisterRequestDTO request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
         return ResponseEntity.ok(authService.login(request));
     }
 }

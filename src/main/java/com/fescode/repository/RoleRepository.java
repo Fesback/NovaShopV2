@@ -1,12 +1,12 @@
 package com.fescode.repository;
 
-import com.fescode.entity.Usuario;
+import com.fescode.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    Optional<Usuario> findByEmail(String email);
+public interface RoleRepository extends JpaRepository<Role, Long> {
+    Optional<Role> findByNombreRol(String nombreRol);
 }
