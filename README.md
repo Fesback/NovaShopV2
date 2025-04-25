@@ -18,6 +18,27 @@
 
 ---
 
+## 🌟 Características Principales
+
+- **Autenticación segura** con JWT (Register/Login) 🔐
+- **Roles de usuario** (ADMIN/USER) con permisos diferenciados 👮‍♂️👤
+- **API RESTful** documentada y bien estructurada 📚
+- **Base de datos relacional** con MySQL 🗃️
+- **Prácticas profesionales**: DTOs, inyección de dependencias, validaciones 🏆
+
+---
+
+## 🛠️ Tecnologías Clave
+
+| Categoría       | Tecnologías                                                                 |
+|-----------------|-----------------------------------------------------------------------------|
+| **Backend**     | ![Java](https://img.shields.io/badge/Java-17-%23ED8B00) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.0-%236DB33F) |
+| **Seguridad**   | ![Spring Security](https://img.shields.io/badge/Spring_Security-6.1.0-%236DB33F) ![JWT](https://img.shields.io/badge/JWT-0.11.5-%23000000) |
+| **Base Datos**  | ![MySQL](https://img.shields.io/badge/MySQL-8.0-%234479A1) ![Hibernate](https://img.shields.io/badge/Hibernate-6.4-%2359666C) |
+| **Herramientas**| ![Maven](https://img.shields.io/badge/Maven-3.9-%23C71A36) ![Lombok](https://img.shields.io/badge/Lombok-1.18-%23000000) ![Postman](https://img.shields.io/badge/Postman-10.0-%23FF6C37) |
+
+---
+
 ## 🎯 Objetivos del proyecto
 
 - Construir un backend *escalable, mantenible y profesional*.
@@ -31,23 +52,51 @@
 ## 📁 Estructura del proyecto
 ```
 📦 com.fescode.novashop
-├── 📂 controller/         → 🌐 Controladores REST (API)
-├── 📂 dto/                → ✉️  Objetos de transferencia de datos (DTOs)
-│   ├── 📂 request/        → 📥 DTOs para solicitudes
-│   └── 📂 response/       → 📤 DTOs para respuestas
-├── 📂 entity/             → 🧱 Entidades JPA (tablas de la base de datos)
-├── 📂 exception/          → ❗ Manejo global de errores y excepciones
-├── 📂 mapper/             → 🔁 Conversores entre entidades y DTOs
-├── 📂 repository/         → 🗄️  Interfaces JPA para acceso a datos
-├── 📂 security/           → 🔐 Seguridad y autenticación
-│   ├── 📂 config/         → ⚙️  Configuración principal de Spring Security
-│   ├── 📂 jwt/            → 🔑 Generación y validación de tokens JWT
-│   └── 📂 service/        → 👤 Servicios de login, register y autorización
-├── 📂 service/            → 💡 Interfaces de lógica de negocio
-├── 📂 service/impl/       → 🧠 Implementaciones de los servicios
-└── 📄 NovaShopApplication → 🚀 Clase principal de arranque
+├── 📂 controller/ → 🌐 Controladores REST (API)
+│ └── AuthController.java
+│
+├── 📂 dto/ → ✉️ Objetos de transferencia
+│ ├── 📂 request/ → 📥 Solicitudes (Login/Register)
+│ │ ├── LoginRequestDTO.java
+│ │ └── RegisterRequestDTO.java
+│ │
+│ └── 📂 response/ → 📤 Respuestas (Login/Register)
+│ ├── LoginResponseDTO.java
+│ └── RegisterResponseDTO.java
+│
+├── 📂 entity/ → 🧱 Entidades JPA
+│ ├── Role.java
+│ └── Usuario.java
+│
+├── 📂 enums/ → 🏷️ Enumeraciones
+│ └── RoleList.java
+│
+├── 📂 exception/ → ❗ Manejo de errores
+│ └── RoleNotFoundException.java
+│
+├── 📂 repository/ → 🗄️ Repositorios JPA
+│ ├── RoleRepository.java
+│ └── UsuarioRepository.java
+│
+├── 📂 security/ → 🔐 Módulo de Seguridad
+│ ├── 📂 config/ → ⚙️ Configuraciones
+│ │ ├── CorsConfig.java
+│ │ └── SecurityConfig.java
+│ │
+│ ├── 📂 jwt/ → 🎟️ JWT Utilities
+│ │ ├── JwtAuthenticationFilter.java
+│ │ └── JwtService.java
+│ │
+│ └── 📂 user/ → 👤 User Details
+│ ├── UserDetailsImpl.java
+│ └── UserDetailsServiceImpl.java
+│
+├── 📂 service/ → 🧠 Servicios
+│ └── 📂 impl/
+│ └── AuthService.java
+│
+└── 📄 NovaShopApplication.java → 🚀 Clase principal
 ```
-
 ---
 
 ## 🧩 Módulos incluidos
@@ -69,16 +118,7 @@ El sistema manejará:
 - Registro y login de usuarios
 - Protección de rutas
 - Generación y validación de tokens JWT
-- Control de acceso por roles (admin, cliente, etc.)
-
-### 🗂 Paquetes de seguridad:
-
-```
-📦 security
-├── 📂 config/   → ⚙️  Configuración de filtros y reglas de seguridad (SecurityFilterChain)
-├── 📂 jwt/      → 🔐 Manejo de JWT (provider, filters, utils)
-└── 📂 service/  → 👤 AuthService con lógica de autenticación (login, register)
-```
+- Control de acceso por roles (ADMIN, USER)
 
 ---
 
