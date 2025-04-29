@@ -6,14 +6,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -24,8 +25,24 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
+    public Collection<? extends GrantedAuthority> extractAuthorities(String token) {
+    final Claims claims = extractAllClaims(token);
+    @SuppressWarnings("unchecked")
+    List<String> authorities = claims.get("authorities", List.class);
+
+    return authorities.stream()
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
+}
+
     public String generateToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, jwtExpiration);
+        Map<String, Object> claims = new HashMap<>();
+
+            claims.put("authorities", userDetails.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList()));
+
+        return buildToken(claims, userDetails, jwtExpiration);
     }
 
     private String buildToken(

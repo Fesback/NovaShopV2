@@ -34,9 +34,10 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public RegisterResponseDTO register(RegisterRequestDTO request) {
-        Role userRole = roleRepository.findByNombreRol("USER")
-                .orElseThrow(() -> new RoleNotFoundException("Rol USER no encontrado"));
+    public RegisterResponseDTO register(RegisterRequestDTO request, boolean isAdminRegistration) {
+            String roleName = isAdminRegistration ? "ADMIN" : "USER";
+            Role role = roleRepository.findByNombreRol(roleName)
+            .orElseThrow(() -> new RoleNotFoundException("Rol no encontrado"));
 
         Usuario usuario = Usuario.builder()
                 .nombre(request.getNombre())
@@ -45,7 +46,7 @@ public class AuthService {
                 .contrasena(passwordEncoder.encode(request.getContrasena()))
                 .direccion(request.getDireccion())
                 .telefono(request.getTelefono())
-                .roles(Set.of(userRole))
+                .roles(Set.of(role))
                 .activo(true)
                 .fechaRegistro(LocalDateTime.now())
                 .build();

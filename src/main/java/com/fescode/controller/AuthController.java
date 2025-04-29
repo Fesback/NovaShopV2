@@ -7,6 +7,7 @@ import com.fescode.dto.response.RegisterResponseDTO;
 import com.fescode.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +22,17 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponseDTO> register(@RequestBody RegisterRequestDTO request) {
-        return ResponseEntity.ok(authService.register(request));
+        return ResponseEntity.ok(authService.register(request, false));
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/register-admin")
+    @PreAuthorize("hasRole('ADMIN')") // Solo accesible por admins
+    public ResponseEntity<RegisterResponseDTO> registerAdmin(@RequestBody RegisterRequestDTO request) {
+        return ResponseEntity.ok(authService.register(request, true));
     }
 }

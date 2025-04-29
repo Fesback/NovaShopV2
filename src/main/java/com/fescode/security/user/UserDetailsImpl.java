@@ -17,7 +17,12 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
     return this.usuario.getRoles().stream()
-            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getNombreRol()))
+            .map(role -> {
+                String roleName = role.getNombreRol();
+                return new SimpleGrantedAuthority(
+                    roleName.startsWith("ROLE_") ? roleName : "ROLE_" + roleName
+                );
+            })
             .collect(Collectors.toList());
     }
 
@@ -49,5 +54,9 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return usuario.getActivo() != null && usuario.getActivo();
+    }
+
+    public Long getId() {
+        return this.usuario.getIdUsuario();
     }
 }
