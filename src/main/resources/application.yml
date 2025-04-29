@@ -42,7 +42,7 @@ logging:
       fescode: DEBUG  # Tus clases personalizadas
 
 jwt:
-  secret: "n/EUgwkn4/cTiWbB8WJasw==uEyKhnf7iQDNv9jmiKe6LAEo3p9TFA41kOLjZPW6"
+  secret: "lDvcX31JRV7VKo6srU6G8QqJ5bRDpcJVGAES3hrgySY"
   expiration: 86400000  # 24 horas en milisegundos
 
 ---

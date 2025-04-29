@@ -22,7 +22,7 @@ public class UsuarioController {
 
     //Crear solo admin
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<UsuarioResponseDTO> crearUsuario(@Valid @RequestBody UsuarioCreateRequestDTO usuarioDTO) {
         UsuarioResponseDTO usuarioCreado = usuarioService.crearUsuario(usuarioDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCreado);
@@ -30,7 +30,7 @@ public class UsuarioController {
 
     //Listar todos los usuarios solo admin
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios() {
         List<UsuarioResponseDTO> usuarios = usuarioService.listarTodos();
         return ResponseEntity.ok(usuarios);
@@ -38,7 +38,7 @@ public class UsuarioController {
 
     //Obtener usuario por id solo admin o el mismo usuario
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #id")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or authentication.principal.id == #id")
     public ResponseEntity<UsuarioResponseDTO> obtenerUsuario(@PathVariable Long id) {
         UsuarioResponseDTO usuario = usuarioService.obtenerPorId(id);
         return ResponseEntity.ok(usuario);
@@ -46,7 +46,7 @@ public class UsuarioController {
 
     //Actualizar usuario solo admin o el mismo usuario
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #id")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or authentication.principal.id == #id")
     public ResponseEntity<UsuarioResponseDTO> actualizarUsuario(
             @PathVariable Long id,
             @Valid @RequestBody UsuarioUpdateRequestDTO usuarioDTO) {
@@ -56,7 +56,7 @@ public class UsuarioController {
 
     //Desactivar usuario solo admin
     @PatchMapping("/{id}/desactivar")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> desactivarUsuario(@PathVariable Long id) {
         usuarioService.desactivarUsuario(id);
         return ResponseEntity.noContent().build();
@@ -64,7 +64,7 @@ public class UsuarioController {
 
     //Activar usuario solo admin
     @PatchMapping("/{id}/activar")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> activarUsuario(@PathVariable Long id) {
         usuarioService.activarUsuario(id);
         return ResponseEntity.noContent().build();

@@ -48,15 +48,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 Collection<? extends GrantedAuthority> authorities = jwtService.extractAuthorities(jwt);
 
-                UserDetails userDetails = User.withUsername(userEmail)
-                    .password("") // No necesitamos la contraseña para autenticación JWT
-                    .authorities(authorities)
-                    .build();
+                // Solo para la seguridad del token
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
-                    authorities // Usamos los authorities del token
+                    userDetails.getAuthorities() // Usamos los authorities del token
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
