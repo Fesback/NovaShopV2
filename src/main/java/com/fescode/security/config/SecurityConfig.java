@@ -47,6 +47,14 @@ public class SecurityConfig {
                 // estos son los metodos publicos solo GET's
                 .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
+
+                // Excepcion: Permitir POST /api/pedidos a USER y ADMIN
+                .requestMatchers(HttpMethod.POST, "/api/pedidos").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+                // Permitir acceso al carrito a USER y ADMIN
+                .requestMatchers("/api/carrito/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+
                  // Metodos donde solo puede actuar el ADMIN
                 .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("ROLE_ADMIN")
