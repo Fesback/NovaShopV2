@@ -4,6 +4,7 @@ import com.fescode.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -34,17 +35,30 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register").permitAll()
-                        .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/auth/register-admin").hasAuthority("ROLE_ADMIN") // Usar hasAuthority
-                        .requestMatchers("/api/**").authenticated() // Solo reqquiere auth no roles
-                        .anyRequest().authenticated()
-                )
+                //Endpoints publicos pues no requieres autenticacion
+                .requestMatchers(
+                    "/auth/register",
+                    "/auth/login",
+                    "/api-docs/**",
+                    "/swagger-ui/**"
+                ).permitAll()
+                // Solo registro de ADMINISTRADORES :)
+                .requestMatchers("/auth/register-admin").hasAuthority("ROLE_ADMIN")
+                // estos son los metodos publicos solo GET's
+                .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
+                 // Metodos donde solo puede actuar el ADMIN
+                .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ROLE_ADMIN")
 
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .anyRequest().authenticated()
+            )
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
