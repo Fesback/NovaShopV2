@@ -172,10 +172,10 @@ El sistema manejará:
 ## ✅ Estado actual
 
 - [x] Estructura inicial creada
-- [ ] CRUD de categoría implementado con DTOs y mapper
+- [x] CRUD de categoría implementado con DTOs y mapper
 - [x] Seguridad con JWT (en desarrollo)
-- [ ] Documentación de API (pendiente con Swagger)
-- [ ] Integración con Angular (en curso)
+- [x] Documentación de API (pendiente con Swagger)
+- [x] Integración con Angular (en curso)
 
 ---
 
