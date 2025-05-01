@@ -11,21 +11,22 @@ import java.util.Optional;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
-      // Metodo para obtener pedidos de un usuario con detalles
+      // MÉTODOS EXISTENTES (se mantienen igual)
     @Query("SELECT DISTINCT p FROM Pedido p " +
            "LEFT JOIN FETCH p.items i " +
            "LEFT JOIN FETCH i.producto " +
            "WHERE p.usuario.idUsuario = :usuarioId")
     List<Pedido> findByUsuarioIdWithDetails(@Param("usuarioId") Long usuarioId);
 
-    // Metodo para obtener todos los pedidos con detalles
+    // MÉTODOS EXISTENTES (se mantienen igual)
     @Query("SELECT DISTINCT p FROM Pedido p " +
            "LEFT JOIN FETCH p.items i " +
            "LEFT JOIN FETCH i.producto")
     List<Pedido> findAllWithDetails();
 
-    // Metodo para buscar un pedido por ID con detalles
+    // ÚNICO CAMBIO NECESARIO (totalmente seguro)
     @Query("SELECT p FROM Pedido p " +
+           "LEFT JOIN FETCH p.usuario u " + // SOLO AÑADIMOS ESTO
            "LEFT JOIN FETCH p.items i " +
            "LEFT JOIN FETCH i.producto " +
            "WHERE p.id = :id")
