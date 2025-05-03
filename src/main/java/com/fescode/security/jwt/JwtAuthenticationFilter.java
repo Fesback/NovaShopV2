@@ -44,9 +44,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt = authHeader.substring(7);
         try {
             final String userEmail = jwtService.extractUsername(jwt);
-
+            Collection<? extends GrantedAuthority> authorities = jwtService.extractAuthorities(jwt);
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                Collection<? extends GrantedAuthority> authorities = jwtService.extractAuthorities(jwt);
+
+
 
                 // Solo para la seguridad del token
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
@@ -55,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
-                    userDetails.getAuthorities() // Usamos los authorities del token
+                    authorities // Usamos los roles extraidos del token
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);

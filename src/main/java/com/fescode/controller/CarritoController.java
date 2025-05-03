@@ -36,6 +36,7 @@ public class CarritoController {
 
     // Actualizar la cantidad de un item en el carrito
     @PutMapping("/item/{idProducto}")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<CarritoResponseDTO> actualizarItem(
             @PathVariable Long idProducto, @RequestParam Integer cantidad) {
         CarritoResponseDTO carrito = carritoService.actualizarItem(idProducto, cantidad);
@@ -44,6 +45,7 @@ public class CarritoController {
 
     // Eliminar un item por producto en el carrito
     @DeleteMapping("/item/producto/{idProducto}")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<Void> eliminarItem(@PathVariable Long idProducto) {
         carritoService.eliminarItem(idProducto);
         return ResponseEntity.noContent().build();

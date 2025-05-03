@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,41 +32,48 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                //Endpoints publicos pues no requieres autenticacion
-                .requestMatchers(
-                    "/auth/register",
-                    "/auth/login",
-                    "/api-docs/**",
-                    "/swagger-ui/**"
-                ).permitAll()
-                // Solo registro de ADMINISTRADORES :)
-                .requestMatchers("/auth/register-admin").hasAuthority("ROLE_ADMIN")
-                // estos son los metodos publicos solo GET's
-                .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    return http
+        .cors(Customizer.withDefaults()) // habilito cors para todas las peticiones
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/error").permitAll()
 
-                // Excepcion: Permitir POST /api/pedidos a USER y ADMIN
-                .requestMatchers(HttpMethod.POST, "/api/pedidos").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            //  Permitir pre-flight CORS requests
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // Permitir acceso al carrito a USER y ADMIN
-                .requestMatchers("/api/carrito/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            // Endpoints públicos
+            .requestMatchers(
+                "/auth/register",
+                "/auth/login",
+                "/api-docs/**",
+                "/swagger-ui/**"
+            ).permitAll()
 
+            // Solo registro de administradores
+            .requestMatchers("/auth/register-admin").hasAuthority("ROLE_ADMIN")
 
-                 // Metodos donde solo puede actuar el ADMIN
-                .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ROLE_ADMIN")
+            // Endpoints GET públicos
+            .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
 
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
-    }
+            // Acceso al carrito para USER y ADMIN
+            .requestMatchers("/api/carrito/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+            // Permitir pedidos a USER y ADMIN
+            .requestMatchers(HttpMethod.POST, "/api/pedidos").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+            // Métodos protegidos solo para ADMIN
+            .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ROLE_ADMIN")
+
+            .anyRequest().authenticated()
+        )
+        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .build();
+}
 
 
     @Bean
