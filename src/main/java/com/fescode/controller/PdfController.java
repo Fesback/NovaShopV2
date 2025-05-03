@@ -1,6 +1,7 @@
 package com.fescode.controller;
 
 import com.fescode.entity.Pedido;
+import com.fescode.exception.PdfGenerationException;
 import com.fescode.exception.RecursoNoEncontradoException;
 import com.fescode.repository.PedidoRepository;
 import com.fescode.service.PdfService;
@@ -23,77 +24,83 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class PdfController {
     private final PdfService pdfService;
-    private final PedidoRepository pedidoRepository; // Añade esta línea
+    private final PedidoRepository pedidoRepository;
 
-     @GetMapping("/boleta/{pedidoId}")
+    @GetMapping("/boleta/{pedidoId}")
     public ResponseEntity<byte[]> descargarBoleta(
             @PathVariable Long pedidoId,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        try {
-            log.debug("Iniciando generación de PDF para pedido ID: {}", pedidoId);
+        final String userEmail = userDetails != null ? userDetails.getUsername() : "N/A";
 
-            // 1. Obtener pedido con relaciones cargadas (incluyendo usuario)
+        try {
+            log.info("Solicitud de boleta - Pedido: {} | Usuario: {}", pedidoId, userEmail);
+
+            // 1. Validación básica de parámetros
+            if (pedidoId == null || pedidoId <= 0) {
+                log.warn("ID de pedido inválido: {}", pedidoId);
+                return ResponseEntity.badRequest().body("ID de pedido inválido".getBytes());
+            }
+
+            // 2. Obtención segura del pedido
             Pedido pedido = pedidoRepository.findByIdWithDetails(pedidoId)
                 .orElseThrow(() -> {
-                    log.warn("Pedido no encontrado: {}", pedidoId);
-                    return new RecursoNoEncontradoException("Pedido no encontrado con ID: " + pedidoId);
+                    log.warn("Pedido no encontrado - ID: {} | Usuario: {}", pedidoId, userEmail);
+                    return new RecursoNoEncontradoException("Pedido no encontrado");
                 });
 
-            // 2. Validar propiedad del pedido (ahora seguro porque usuario está cargado)
-            if (pedido.getUsuario() == null || !pedido.getUsuario().getEmail().equals(userDetails.getUsername())) {
-                log.warn("Intento de acceso no autorizado. Pedido: {}, Usuario: {}",
-                        pedidoId, userDetails.getUsername());
-                throw new AccessDeniedException("No tienes permiso para acceder a este pedido");
+            // 3. Validación de propiedad reforzada
+            if (pedido.getUsuario() == null) {
+                log.error("Pedido sin usuario asociado - ID: {}", pedidoId);
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Pedido no tiene usuario asociado".getBytes());
             }
 
-            // 3. Validar datos mínimos
+            if (!pedido.getUsuario().getEmail().equals(userEmail)) {
+                log.warn("Intento de acceso no autorizado - Pedido: {} | Usuario solicitante: {}",
+                        pedidoId, userEmail);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Acceso no autorizado".getBytes());
+            }
+
+            // 4. Validación de integridad de datos
             if (pedido.getItems() == null || pedido.getItems().isEmpty()) {
-                log.error("Pedido {} no tiene items", pedidoId);
-                throw new IllegalStateException("El pedido no contiene items");
+                log.error("Pedido sin items - ID: {} | Usuario: {}", pedidoId, userEmail);
+                return ResponseEntity.badRequest()
+                    .body("El pedido no contiene items".getBytes());
             }
 
-            // 4. Generar PDF
-            byte[] pdfBytes;
+            // 5. Generación controlada del PDF
             try {
-                pdfBytes = pdfService.generarBoletaPedido(pedido);
-                log.debug("PDF generado correctamente para pedido {}", pedidoId);
-            } catch (Exception e) {
-                log.error("Error al generar PDF para pedido {}", pedidoId, e);
-                throw new RuntimeException("Error al generar PDF: " + e.getMessage(), e);
+                byte[] pdfBytes = pdfService.generarBoletaPedido(pedido);
+
+                if (pdfBytes == null || pdfBytes.length == 0) {
+                    throw new IllegalStateException("PDF generado vacío");
+                }
+
+                log.info("PDF generado exitosamente - Tamaño: {} KB | Pedido: {}",
+                        pdfBytes.length / 1024, pedidoId);
+
+                return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=boleta_" + pedidoId + ".pdf")
+                    .body(pdfBytes);
+
+            } catch (PdfGenerationException e) {
+                log.error("Error técnico al generar PDF - Pedido: {} | Error: {}",
+                        pedidoId, e.getMessage());
+                return ResponseEntity.internalServerError()
+                    .body("Error técnico al generar la boleta".getBytes());
             }
-
-            // 5. Verificar PDF generado
-            if (pdfBytes == null || pdfBytes.length == 0) {
-                log.error("PDF generado vacío para pedido {}", pedidoId);
-                throw new IllegalStateException("El PDF generado está vacío");
-            }
-
-            // 6. Retornar respuesta
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDispositionFormData("filename", "boleta_" + pedidoId + ".pdf");
-
-            log.info("PDF entregado exitosamente para pedido {}", pedidoId);
-            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
 
         } catch (RecursoNoEncontradoException e) {
-            log.error("Recurso no encontrado: {}", e.getMessage());
             return ResponseEntity.notFound().build();
-        } catch (AccessDeniedException e) {
-            log.error("Acceso denegado: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                   .body(e.getMessage().getBytes(StandardCharsets.UTF_8));
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            log.error("Error de validación: {}", e.getMessage());
-            return ResponseEntity.badRequest()
-                   .body(e.getMessage().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            log.error("Error interno al generar PDF para pedido {}: {}", pedidoId, e.getMessage(), e);
+            log.error("Error inesperado - Pedido: {} | Usuario: {} | Error: {}",
+                    pedidoId, userEmail, e.getMessage());
             return ResponseEntity.internalServerError()
-                   .body(("Error interno al generar PDF. Detalles: " + e.getMessage())
-                   .getBytes(StandardCharsets.UTF_8));
+                .body("Error interno del servidor".getBytes());
         }
     }
 }
-
