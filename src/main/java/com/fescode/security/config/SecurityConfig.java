@@ -37,7 +37,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .cors(Customizer.withDefaults()) // habilito cors para todas las peticiones
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/error").permitAll()
 
             //  Permitir pre-flight CORS requests
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
