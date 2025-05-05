@@ -300,6 +300,59 @@ INSERT INTO categoria (nombre_categoria, descripcion) VALUES
 ('Celulares', 'Teléfonos de última generación'),
 ('Accesorios', 'Accesorios para los dispositivos');
 
+-- Laptops
+INSERT INTO producto (nombre, descripcion, precio, stock, imagen, id_categoria) VALUES
+('Acer Predator Helios 300', 'Laptop gamer con RTX 3060 y pantalla 144Hz.', 4999.00, 10, 'predator.jpg', 1),
+('ASUS ROG Strix G15', 'Laptop gamer Ryzen 7, 16GB RAM y SSD de 512GB.', 5699.00, 8, 'rog_strix.jpg', 1),
+('MSI GF63 Thin', 'Gaming laptop con diseño liviano y potencia Intel i5.', 3899.00, 15, 'msi_gf63.jpg', 1),
+('Lenovo Legion 5', 'Rendimiento gamer con Ryzen 5 y GTX 1660 Ti.', 4399.00, 12, 'legion_5.jpg', 1),
+('HP Omen 16', 'Gaming laptop con Intel i7 y RTX 3050.', 5299.00, 7, 'omen16.jpg', 1),
+('Dell G15', 'Laptop gamer con diseño robusto y sistema térmico avanzado.', 4599.00, 9, 'dellg15.jpg', 1),
+('Razer Blade 15', 'Laptop premium para gamers exigentes.', 9999.00, 3, 'razerblade.jpg', 1),
+('Gigabyte Aorus 5', 'Gaming laptop con alta frecuencia de refresco.', 4799.00, 10, 'aorus5.jpg', 1),
+('Acer Nitro 5', 'Opción gamer accesible con buenas prestaciones.', 3799.00, 14, 'nitro5.jpg', 1),
+('ASUS TUF Gaming F15', 'Durabilidad y rendimiento para juegos exigentes.', 4299.00, 10, 'tuf_f15.jpg', 1);
+
+-- Tablets
+INSERT INTO producto (nombre, descripcion, precio, stock, imagen, id_categoria) VALUES
+('Samsung Galaxy Tab S8', 'Tablet premium con S Pen incluido.', 2899.00, 12, 'tabs8.jpg', 2),
+('Samsung Galaxy Tab A8', 'Tablet de gama media para entretenimiento.', 1299.00, 20, 'taba8.jpg', 2),
+('iPad 10ª Gen', 'Nueva generación con chip A14 Bionic.', 2899.00, 8, 'ipad10.jpg', 2),
+('iPad Pro M1', 'Tablet profesional con chip Apple M1.', 4999.00, 5, 'ipadpro.jpg', 2),
+('Huawei MatePad 11', 'Tablet Android con stylus.', 2399.00, 7, 'matepad11.jpg', 2),
+('Huawei MatePad T10s', 'Tablet económica con buena pantalla.', 999.00, 15, 'matepadt10.jpg', 2),
+('Samsung Tab S7 FE', 'Gran pantalla para productividad.', 1999.00, 10, 'tabs7fe.jpg', 2),
+('iPad mini 6', 'Compacta, potente y portátil.', 2299.00, 6, 'ipadmini6.jpg', 2),
+('Samsung Tab Active3', 'Tablet resistente para trabajo en campo.', 2599.00, 4, 'tabactive3.jpg', 2),
+('Huawei MediaPad M5', 'Sonido y rendimiento en un solo equipo.', 1899.00, 9, 'mediapadm5.jpg', 2);
+
+-- Celulares
+INSERT INTO producto (nombre, descripcion, precio, stock, imagen, id_categoria) VALUES
+('iPhone 15 Pro Max', 'Última generación con chip A17 Pro.', 6399.00, 5, 'iphone15pro.jpg', 3),
+('iPhone 14', 'Gran cámara y rendimiento.', 4799.00, 10, 'iphone14.jpg', 3),
+('Samsung Galaxy S23 Ultra', 'Poder absoluto en Android.', 5799.00, 7, 's23ultra.jpg', 3),
+('Samsung Galaxy A54', 'Excelente opción calidad-precio.', 1899.00, 14, 'a54.jpg', 3),
+('Huawei P50 Pro', 'Cámara Leica y diseño elegante.', 2999.00, 6, 'p50pro.jpg', 3),
+('Huawei Nova 10', 'Smartphone con carga rápida y buen diseño.', 1599.00, 10, 'nova10.jpg', 3),
+('iPhone SE (2022)', 'Potente y compacto.', 2399.00, 12, 'iphonese.jpg', 3),
+('Samsung Galaxy Z Flip4', 'Celular plegable de última generación.', 5599.00, 3, 'zflip4.jpg', 3),
+('Motorola Edge 40', 'Experiencia fluida con Android limpio.', 1799.00, 10, 'edge40.jpg', 3),
+('Xiaomi Redmi Note 12', 'Gran rendimiento a bajo precio.', 899.00, 20, 'note12.jpg', 3);
+
+-- Accesorios
+INSERT INTO producto (nombre, descripcion, precio, stock, imagen, id_categoria) VALUES
+('Teclado mecánico Redragon', 'RGB y switches rojos para gaming.', 229.00, 30, 'teclado_redragon.jpg', 4),
+('Mouse Logitech G502', 'Precisión y diseño ergonómico.', 299.00, 25, 'g502.jpg', 4),
+('Headset HyperX Cloud II', 'Sonido envolvente para juegos.', 399.00, 15, 'hyperx.jpg', 4),
+('Base refrigerante para laptop', 'Mantén tu equipo fresco.', 99.00, 20, 'refrigerante.jpg', 4),
+('Mousepad XL RGB', 'Gran espacio con luces RGB.', 89.00, 18, 'mousepadrgb.jpg', 4),
+('Cable USB-C 2m reforzado', 'Carga rápida y resistente.', 29.00, 50, 'cableusb.jpg', 4),
+('Soporte para celular', 'Ideal para escritorio.', 19.00, 40, 'soportecel.jpg', 4),
+('Hub USB 3.0 4 Puertos', 'Expande tus conexiones.', 49.00, 20, 'hubusb.jpg', 4),
+('Cargador inalámbrico Qi', 'Compatible con iPhone y Android.', 79.00, 15, 'wirelesscharger.jpg', 4),
+('Luz LED para escritorio', 'Ilumina tu zona de trabajo.', 69.00, 10, 'leddesk.jpg', 4);
+
+
 -- Insertar un Administrador especial (contraseña encriptada)
 INSERT INTO usuario (
     nombre, apellido, email, contrasena, direccion, telefono, fecha_registro, activo
@@ -355,6 +408,7 @@ SELECT * FROM carrito;
 
 -- Ver todos los carritoItem
 SELECT * FROM carritoitem;
+
 
 
 
